@@ -16,16 +16,17 @@
 
 This project is intentionally small, but it is wired like a real ML codebase:
 
-- clean packaging with `pyproject.toml`
+- clean packaging with pyproject.toml
 - module-based CLI entry points
 - YAML and dotlist configuration overrides
 - checkpointing and resume support
-- a streaming-friendly `.npy` shard API
+- a streaming-friendly .npy shard API
 - smoke tests that validate the full training loop
 - a benchmark command for quick throughput checks
 - an end-to-end demo that generates data, trains, benchmarks, and writes a report
 - rotary positional embeddings for longer-context extrapolation
 - a public Tiny Shakespeare evaluation with baseline comparison
+- a larger public WikiText-2 benchmark with n-gram baselines and ablations
 
 ## What is included
 
@@ -33,13 +34,14 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - scaled dot-product attention and multi-head attention
 - a Transformer language model with learned positional embeddings
 - tied input/output embeddings
-- `.npy` dataset loading and shard concatenation
+- .npy dataset loading and shard concatenation
 - synthetic data generation for fast local experiments
 - training, validation, checkpointing, and resume support
 - a benchmark CLI that reports tokens/sec and batch latency
 - a demo CLI that creates a reproducible showcase artifact
 - rotary embeddings as an advanced positional encoding option
 - a public evaluation CLI for Tiny Shakespeare
+- a public benchmark CLI for WikiText-2 with learned-vs-RoPE and tied-vs-untied ablations
 
 ## Installation
 
@@ -65,8 +67,8 @@ tfs-generate --output-dir data --model-seq-len 32
 
 This creates:
 
-- `data/train.npy`
-- `data/valid.npy`
+- data/train.npy
+- data/valid.npy
 
 ### 2. Train
 
@@ -127,7 +129,7 @@ This command will:
 - load the best checkpoint
 - evaluate validation loss
 - benchmark throughput
-- write a `report.json` file
+- write a report.json file
 
 ### 5. Resume from a checkpoint
 
@@ -150,7 +152,7 @@ Highlights from the latest run:
 - benchmark throughput: 433,144.12 tokens/sec
 - mean batch latency: 0.2955 ms
 
-The raw demo artifacts live under [runs/showcase-copy-30](runs/showcase-copy-30).
+The raw demo artifacts live under runs/showcase-copy-30.
 
 ## Public dataset result
 
@@ -159,15 +161,34 @@ character-language-modeling dataset from [karpathy/char-rnn](https://github.com/
 
 Highlights from the latest public run:
 
-- unigram baseline loss: 3.3475
-- model validation loss: 2.0016
-- unigram baseline perplexity: 28.4320
-- model perplexity: 7.4007
-- benchmark throughput: 158,021.73 tokens/sec
-- mean batch latency: 25.9205 ms
+- unigram baseline loss: 3.3473
+- bigram baseline loss: 2.4819
+- model validation loss: 2.0040
+- unigram baseline perplexity: 28.4260
+- bigram baseline perplexity: 11.9638
+- model perplexity: 7.4190
+- benchmark throughput: 143,273.09 tokens/sec
+- mean batch latency: 28.5888 ms
 
 The raw public artifacts live under [runs/public-eval](runs/public-eval), and the full summary is
 captured in [RESULTS_PUBLIC.md](RESULTS_PUBLIC.md).
+
+## Public benchmark and ablation suite
+
+The repository now includes a larger public benchmark on WikiText-2 from
+[pytorch/examples](https://github.com/pytorch/examples), plus a small ablation sweep.
+
+This run compares:
+
+- unigram and bigram baselines
+- RoPE with tied embeddings
+- learned embeddings with tied embeddings
+- RoPE with untied embeddings
+
+It also benchmarks the RoPE model at a longer context length to show the throughput profile on a
+more production-like setting.
+
+The latest benchmark summary is captured in [RESULTS_BENCHMARK.md](RESULTS_BENCHMARK.md).
 
 ## Configuration
 
@@ -192,7 +213,9 @@ python -m transformer_from_scratch.train \
 - [src/transformer_from_scratch/benchmark.py](src/transformer_from_scratch/benchmark.py) — throughput and latency benchmarking
 - [src/transformer_from_scratch/demo.py](src/transformer_from_scratch/demo.py) — end-to-end showcase pipeline
 - [src/transformer_from_scratch/public_eval.py](src/transformer_from_scratch/public_eval.py) — public dataset validation and baseline comparison
-- [src/transformer_from_scratch/public_data.py](src/transformer_from_scratch/public_data.py) — Tiny Shakespeare download and tokenization helpers
+- [src/transformer_from_scratch/public_benchmark.py](src/transformer_from_scratch/public_benchmark.py) — public benchmark and ablation suite
+- [src/transformer_from_scratch/public_data.py](src/transformer_from_scratch/public_data.py) — public text download and tokenization helpers
+- [src/transformer_from_scratch/baselines.py](src/transformer_from_scratch/baselines.py) — unigram and bigram baselines
 - [src/transformer_from_scratch/generation.py](src/transformer_from_scratch/generation.py) — autoregressive sampling helpers
 - [src/transformer_from_scratch/optim.py](src/transformer_from_scratch/optim.py) — optimizer and scheduler helpers
 - [src/transformer_from_scratch/checkpoint.py](src/transformer_from_scratch/checkpoint.py) — checkpoint save/load helpers
@@ -230,12 +253,18 @@ Run the public dataset evaluation:
 make public-eval
 ```
 
+Run the public benchmark and ablations:
+
+```bash
+make public-benchmark
+```
+
 ## Design notes
 
 The dataset stores full token sequences, and the collate function shifts them into language-model pairs:
 
-- input = `seq[:-1]`
-- target = `seq[1:]`
+- input = seq[:-1]
+- target = seq[1:]
 
 This keeps the implementation simple while preserving standard autoregressive training behavior.
 

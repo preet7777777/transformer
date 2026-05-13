@@ -1,4 +1,4 @@
-.PHONY: install test style checks data benchmark public-eval
+.PHONY: install test style checks data benchmark public-eval public-benchmark
 
 install:
 	pip install -e ".[dev]"
@@ -22,3 +22,6 @@ benchmark:
 
 public-eval:
 	python -m transformer_from_scratch.public_eval
+
+public-benchmark:
+	python -m transformer_from_scratch.public_benchmark

@@ -19,6 +19,7 @@ class ModelConfig:
     d_ff: int = 256
     dropout: float = 0.1
     positional_encoding: str = "learned"
+    tie_embeddings: bool = True
 
 
 @dataclass

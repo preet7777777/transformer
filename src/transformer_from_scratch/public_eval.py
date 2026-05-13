@@ -12,18 +12,11 @@ from .benchmark import run_benchmark
 from .checkpoint import load_checkpoint
 from .config import ModelConfig
 from .model import TransformerLM
+from .baselines import bigram_baseline_loss, unigram_baseline_loss
 from .public_data import prepare_tiny_shakespeare
 from .train import evaluate
 from .train import main as train_main
 from .utils import ensure_dir, resolve_device, set_seed
-
-
-def unigram_baseline_loss(
-    train_tokens: np.ndarray, valid_tokens: np.ndarray, vocab_size: int
-) -> float:
-    counts = np.bincount(train_tokens.astype(np.int64), minlength=vocab_size).astype(np.float64)
-    probs = (counts + 1.0) / (counts.sum() + vocab_size)
-    return float(-np.mean(np.log(probs[valid_tokens.astype(np.int64)])))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -45,6 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--benchmark-iterations", type=int, default=50)
+    parser.add_argument("--device", type=str, default=None)
     return parser
 
 
@@ -53,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     set_seed(args.seed)
-    device = resolve_device(None)
+    device = resolve_device(args.device)
     output_dir = ensure_dir(args.output_dir)
     data_dir = output_dir / "tiny_shakespeare"
     ensure_dir(data_dir)
@@ -65,45 +59,45 @@ def main(argv: list[str] | None = None) -> int:
         stride=args.stride,
     )
 
-    train_tokens = np.load(dataset_info["train_path"])
-    valid_tokens = np.load(dataset_info["valid_path"])
+    raw_train_tokens = np.load(dataset_info["train_tokens_path"])
+    raw_valid_tokens = np.load(dataset_info["valid_tokens_path"])
     vocab_size = int(dataset_info["vocab_size"])
-    baseline_loss = unigram_baseline_loss(
-        train_tokens[:, :-1].ravel(), valid_tokens[:, 1:].ravel(), vocab_size
-    )
+    baseline_unigram_loss = unigram_baseline_loss(raw_train_tokens, raw_valid_tokens, vocab_size)
+    baseline_bigram_loss = bigram_baseline_loss(raw_train_tokens, raw_valid_tokens, vocab_size)
 
-    train_main(
-        [
-            "--train-path",
-            dataset_info["train_path"],
-            "--valid-path",
-            dataset_info["valid_path"],
-            "--out-dir",
-            str(output_dir / "runs"),
-            "--epochs",
-            str(args.epochs),
-            "--batch-size",
-            str(args.batch_size),
-            "--lr",
-            str(args.lr),
-            "--vocab-size",
-            str(vocab_size),
-            "--seq-len",
-            str(args.seq_len),
-            "--d-model",
-            str(args.d_model),
-            "--n-layers",
-            str(args.n_layers),
-            "--n-heads",
-            str(args.n_heads),
-            "--d-ff",
-            str(args.d_ff),
-            "--dropout",
-            str(args.dropout),
-            "--positional-encoding",
-            str(args.positional_encoding),
-        ]
-    )
+    train_args = [
+        "--train-path",
+        dataset_info["train_path"],
+        "--valid-path",
+        dataset_info["valid_path"],
+        "--out-dir",
+        str(output_dir / "runs"),
+        "--epochs",
+        str(args.epochs),
+        "--batch-size",
+        str(args.batch_size),
+        "--lr",
+        str(args.lr),
+        "--vocab-size",
+        str(vocab_size),
+        "--seq-len",
+        str(args.seq_len),
+        "--d-model",
+        str(args.d_model),
+        "--n-layers",
+        str(args.n_layers),
+        "--n-heads",
+        str(args.n_heads),
+        "--d-ff",
+        str(args.d_ff),
+        "--dropout",
+        str(args.dropout),
+        "--positional-encoding",
+        str(args.positional_encoding),
+    ]
+    if args.device is not None:
+        train_args.extend(["--device", str(args.device)])
+    train_main(train_args)
 
     config = ModelConfig(
         vocab_size=vocab_size,
@@ -142,9 +136,11 @@ def main(argv: list[str] | None = None) -> int:
         "seq_len": args.seq_len,
         "train_windows": dataset_info["train_windows"],
         "valid_windows": dataset_info["valid_windows"],
-        "baseline_unigram_loss": baseline_loss,
+        "baseline_unigram_loss": baseline_unigram_loss,
+        "baseline_bigram_loss": baseline_bigram_loss,
         "model_validation_loss": model_loss,
-        "baseline_perplexity": float(math.exp(baseline_loss)),
+        "baseline_perplexity": float(math.exp(baseline_unigram_loss)),
+        "baseline_bigram_perplexity": float(math.exp(baseline_bigram_loss)),
         "model_perplexity": float(math.exp(model_loss)),
         "checkpoint": str(checkpoint_path),
         "benchmark": benchmark,

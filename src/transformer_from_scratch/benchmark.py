@@ -64,6 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--d-ff", type=int, default=256)
     parser.add_argument("--dropout", type=float, default=0.0)
     parser.add_argument("--positional-encoding", type=str, default="learned")
+    parser.add_argument("--tie-embeddings", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--warmup-steps", type=int, default=10)
     parser.add_argument("--iterations", type=int, default=50)
@@ -87,6 +88,7 @@ def main(argv: list[str] | None = None) -> int:
         d_ff=args.d_ff,
         dropout=args.dropout,
         positional_encoding=args.positional_encoding,
+        tie_embeddings=args.tie_embeddings,
     )
     model = TransformerLM(config).to(device)
     result = run_benchmark(

@@ -70,7 +70,8 @@ class TransformerLM(nn.Module):
         self.final_norm = nn.LayerNorm(config.d_model)
         self.lm_head = nn.Linear(config.d_model, config.vocab_size, bias=False)
         self.apply(self._init_weights)
-        self.lm_head.weight = self.token_embedding.weight
+        if config.tie_embeddings:
+            self.lm_head.weight = self.token_embedding.weight
 
     def _init_weights(self, module: nn.Module) -> None:
         if isinstance(module, nn.Linear):

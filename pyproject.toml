@@ -13,7 +13,6 @@ dependencies = [
   "numpy",
   "pyyaml",
   "tqdm",
-  "pytest",
 ]
 
 [project.optional-dependencies]
@@ -21,6 +20,7 @@ dev = [
   "black",
   "isort",
   "ruff",
+  "pytest",
 ]
 
 [project.scripts]
@@ -30,6 +30,7 @@ tfs-benchmark = "transformer_from_scratch.benchmark:main"
 tfs-demo = "transformer_from_scratch.demo:main"
 tfs-sample = "transformer_from_scratch.generation:main"
 tfs-public-eval = "transformer_from_scratch.public_eval:main"
+tfs-public-benchmark = "transformer_from_scratch.public_benchmark:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

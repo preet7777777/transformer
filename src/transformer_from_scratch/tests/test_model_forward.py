@@ -76,3 +76,21 @@ def test_rope_allows_longer_context_than_learned() -> None:
     with pytest.raises(ValueError):
         _ = learned_model(input_ids)
     assert rope_model(input_ids).shape == (2, 24, 64)
+
+
+def test_untied_embeddings_are_supported() -> None:
+    config = ModelConfig(
+        vocab_size=64,
+        d_model=32,
+        n_layers=1,
+        n_heads=4,
+        seq_len=16,
+        d_ff=64,
+        dropout=0.0,
+        tie_embeddings=False,
+    )
+    model = TransformerLM(config)
+    assert model.lm_head.weight is not model.token_embedding.weight
+    input_ids = torch.randint(0, config.vocab_size, (2, 16))
+    logits = model(input_ids)
+    assert logits.shape == (2, 16, 64)

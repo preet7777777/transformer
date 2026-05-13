@@ -13,10 +13,12 @@ Generated on 2026-05-13 from the end-to-end Tiny Shakespeare evaluation.
 
 ## Baselines and model result
 
-- Unigram baseline loss: 3.347513876459042
-- Unigram baseline perplexity: 28.43196033871676
-- Model validation loss: 2.0015726940972463
-- Model perplexity: 7.400685966556666
+- Unigram baseline loss: 3.347305335368931
+- Bigram baseline loss: 2.4818894321158234
+- Unigram baseline perplexity: 28.426031724915003
+- Bigram baseline perplexity: 11.963847954655076
+- Model validation loss: 2.0040488498551503
+- Model perplexity: 7.419033924551305
 
 ## Training configuration
 
@@ -34,8 +36,8 @@ Generated on 2026-05-13 from the end-to-end Tiny Shakespeare evaluation.
 
 - Device: cpu
 - Parameters: 272,512
-- Mean batch latency: 25.9205 ms
-- Throughput: 158,021.73 tokens/sec
+- Mean batch latency: 28.5888 ms
+- Throughput: 143,273.09 tokens/sec
 
 ## Artifacts
 

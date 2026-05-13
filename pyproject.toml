@@ -27,6 +27,8 @@ dev = [
 tfs-train = "transformer_from_scratch.train:main"
 tfs-generate = "transformer_from_scratch.prepare_synthetic:main"
 tfs-benchmark = "transformer_from_scratch.benchmark:main"
+tfs-demo = "transformer_from_scratch.demo:main"
+tfs-sample = "transformer_from_scratch.generation:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

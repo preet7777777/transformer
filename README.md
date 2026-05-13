@@ -23,6 +23,7 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - a streaming-friendly `.npy` shard API
 - smoke tests that validate the full training loop
 - a benchmark command for quick throughput checks
+- an end-to-end demo that generates data, trains, benchmarks, and writes a report
 
 ## What is included
 
@@ -34,6 +35,7 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - synthetic data generation for fast local experiments
 - training, validation, checkpointing, and resume support
 - a benchmark CLI that reports tokens/sec and batch latency
+- a demo CLI that creates a reproducible showcase artifact
 
 ## Installation
 
@@ -93,7 +95,22 @@ The benchmark prints JSON with:
 - tokens per second
 - device information
 
-### 4. Resume from a checkpoint
+### 4. Run the end-to-end demo
+
+```bash
+tfs-demo --output-dir runs/showcase
+```
+
+This command will:
+
+- generate fresh synthetic data
+- train the model
+- load the best checkpoint
+- evaluate validation loss
+- benchmark throughput
+- write a `report.json` file
+
+### 5. Resume from a checkpoint
 
 ```bash
 python -m transformer_from_scratch.train \
@@ -124,6 +141,8 @@ python -m transformer_from_scratch.train \
 - [src/transformer_from_scratch/prepare_synthetic.py](src/transformer_from_scratch/prepare_synthetic.py) — synthetic data generation
 - [src/transformer_from_scratch/train.py](src/transformer_from_scratch/train.py) — training CLI
 - [src/transformer_from_scratch/benchmark.py](src/transformer_from_scratch/benchmark.py) — throughput and latency benchmarking
+- [src/transformer_from_scratch/demo.py](src/transformer_from_scratch/demo.py) — end-to-end showcase pipeline
+- [src/transformer_from_scratch/generation.py](src/transformer_from_scratch/generation.py) — autoregressive sampling helpers
 - [src/transformer_from_scratch/optim.py](src/transformer_from_scratch/optim.py) — optimizer and scheduler helpers
 - [src/transformer_from_scratch/checkpoint.py](src/transformer_from_scratch/checkpoint.py) — checkpoint save/load helpers
 - [src/transformer_from_scratch/tests](src/transformer_from_scratch/tests) — unit and smoke tests

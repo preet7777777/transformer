@@ -1,4 +1,4 @@
-.PHONY: install test style checks data
+.PHONY: install test style checks data benchmark
 
 install:
 	pip install -e ".[dev]"
@@ -16,3 +16,6 @@ checks:
 
 data:
 	python -m transformer_from_scratch.prepare_synthetic
+
+benchmark:
+	python -m transformer_from_scratch.benchmark

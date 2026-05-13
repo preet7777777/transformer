@@ -26,7 +26,7 @@ def generate_synthetic_data(
     np.save(output / "valid.npy", valid)
 
 
-if __name__ == "__main__":
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate synthetic LM data")
     parser.add_argument("--output-dir", default=".")
     parser.add_argument("--vocab-size", type=int, default=256)
@@ -34,5 +34,10 @@ if __name__ == "__main__":
     parser.add_argument("--n-train", type=int, default=256)
     parser.add_argument("--n-valid", type=int, default=64)
     parser.add_argument("--seed", type=int, default=42)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     generate_synthetic_data(**vars(args))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

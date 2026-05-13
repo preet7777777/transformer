@@ -23,6 +23,11 @@ dev = [
   "ruff",
 ]
 
+[project.scripts]
+tfs-train = "transformer_from_scratch.train:main"
+tfs-generate = "transformer_from_scratch.prepare_synthetic:main"
+tfs-benchmark = "transformer_from_scratch.benchmark:main"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 

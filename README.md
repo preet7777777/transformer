@@ -262,6 +262,7 @@ make public-benchmark
 ## Contributing
 
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and [ROADMAP.md](ROADMAP.md).
+See [OPEN_SOURCE.md](OPEN_SOURCE.md) for branch protection and collaboration guidance, and [SECURITY.md](SECURITY.md) for reporting security issues.
 
 If you want to help but do not know where to start, good first contributions include:
 

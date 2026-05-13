@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transformer-from-scratch"
+version = "0.1.0"
+description = "A compact Transformer language model built from scratch"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "torch",
+  "numpy",
+  "pyyaml",
+  "tqdm",
+  "pytest",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "isort",
+  "ruff",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/transformer_from_scratch/tests"]

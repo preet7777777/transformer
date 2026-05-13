@@ -25,6 +25,7 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - a benchmark command for quick throughput checks
 - an end-to-end demo that generates data, trains, benchmarks, and writes a report
 - rotary positional embeddings for longer-context extrapolation
+- a public Tiny Shakespeare evaluation with baseline comparison
 
 ## What is included
 
@@ -38,6 +39,7 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - a benchmark CLI that reports tokens/sec and batch latency
 - a demo CLI that creates a reproducible showcase artifact
 - rotary embeddings as an advanced positional encoding option
+- a public evaluation CLI for Tiny Shakespeare
 
 ## Installation
 
@@ -150,6 +152,23 @@ Highlights from the latest run:
 
 The raw demo artifacts live under [runs/showcase-copy-30](runs/showcase-copy-30).
 
+## Public dataset result
+
+The repository also includes an external validation run on Tiny Shakespeare, a classic public
+character-language-modeling dataset from [karpathy/char-rnn](https://github.com/karpathy/char-rnn).
+
+Highlights from the latest public run:
+
+- unigram baseline loss: 3.3475
+- model validation loss: 2.0016
+- unigram baseline perplexity: 28.4320
+- model perplexity: 7.4007
+- benchmark throughput: 158,021.73 tokens/sec
+- mean batch latency: 25.9205 ms
+
+The raw public artifacts live under [runs/public-eval](runs/public-eval), and the full summary is
+captured in [RESULTS_PUBLIC.md](RESULTS_PUBLIC.md).
+
 ## Configuration
 
 The training CLI supports both explicit flags and dotlist overrides:
@@ -172,6 +191,8 @@ python -m transformer_from_scratch.train \
 - [src/transformer_from_scratch/train.py](src/transformer_from_scratch/train.py) — training CLI
 - [src/transformer_from_scratch/benchmark.py](src/transformer_from_scratch/benchmark.py) — throughput and latency benchmarking
 - [src/transformer_from_scratch/demo.py](src/transformer_from_scratch/demo.py) — end-to-end showcase pipeline
+- [src/transformer_from_scratch/public_eval.py](src/transformer_from_scratch/public_eval.py) — public dataset validation and baseline comparison
+- [src/transformer_from_scratch/public_data.py](src/transformer_from_scratch/public_data.py) — Tiny Shakespeare download and tokenization helpers
 - [src/transformer_from_scratch/generation.py](src/transformer_from_scratch/generation.py) — autoregressive sampling helpers
 - [src/transformer_from_scratch/optim.py](src/transformer_from_scratch/optim.py) — optimizer and scheduler helpers
 - [src/transformer_from_scratch/checkpoint.py](src/transformer_from_scratch/checkpoint.py) — checkpoint save/load helpers
@@ -201,6 +222,12 @@ Run the benchmark:
 
 ```bash
 make benchmark
+```
+
+Run the public dataset evaluation:
+
+```bash
+make public-eval
 ```
 
 ## Design notes

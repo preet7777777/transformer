@@ -63,6 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--seq-len", type=int, default=32)
     parser.add_argument("--d-ff", type=int, default=256)
     parser.add_argument("--dropout", type=float, default=0.0)
+    parser.add_argument("--positional-encoding", type=str, default="learned")
     parser.add_argument("--prompt", type=int, nargs="*", default=[0])
     parser.add_argument("--max-new-tokens", type=int, default=16)
     parser.add_argument("--temperature", type=float, default=1.0)
@@ -86,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
         seq_len=args.seq_len,
         d_ff=args.d_ff,
         dropout=args.dropout,
+        positional_encoding=args.positional_encoding,
     )
     model = TransformerLM(config).to(device)
     load_checkpoint(args.checkpoint, model)

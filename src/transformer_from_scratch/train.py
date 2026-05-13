@@ -91,6 +91,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--n-heads", type=int, default=None)
     parser.add_argument("--d-ff", type=int, default=None)
     parser.add_argument("--dropout", type=float, default=None)
+    parser.add_argument("--positional-encoding", type=str, default=None)
     return parser
 
 
@@ -139,6 +140,8 @@ def main(argv: list[str] | None = None) -> int:
         config.model.d_ff = args.d_ff
     if args.dropout is not None:
         config.model.dropout = args.dropout
+    if args.positional_encoding is not None:
+        config.model.positional_encoding = args.positional_encoding
 
     set_seed(config.train.seed)
     device = resolve_device(args.device)

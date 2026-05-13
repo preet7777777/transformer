@@ -24,6 +24,7 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - smoke tests that validate the full training loop
 - a benchmark command for quick throughput checks
 - an end-to-end demo that generates data, trains, benchmarks, and writes a report
+- rotary positional embeddings for longer-context extrapolation
 
 ## What is included
 
@@ -36,6 +37,7 @@ This project is intentionally small, but it is wired like a real ML codebase:
 - training, validation, checkpointing, and resume support
 - a benchmark CLI that reports tokens/sec and batch latency
 - a demo CLI that creates a reproducible showcase artifact
+- rotary embeddings as an advanced positional encoding option
 
 ## Installation
 
@@ -106,6 +108,15 @@ For a stronger demo result, use a learnable synthetic pattern:
 ```bash
 tfs-demo --output-dir runs/showcase --mode copy --epochs 30
 ```
+
+For a more research-style architecture, try rotary embeddings:
+
+```bash
+tfs-demo --output-dir runs/rope-showcase --positional-encoding rope --mode copy --epochs 30
+```
+
+RoPE lets the model run on sequence lengths beyond the learned-context limit, which is useful for
+long-context extrapolation experiments.
 
 This command will:
 

@@ -31,6 +31,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--n-heads", type=int, default=4)
     parser.add_argument("--d-ff", type=int, default=256)
     parser.add_argument("--dropout", type=float, default=0.1)
+    parser.add_argument(
+        "--positional-encoding", type=str, default="learned", choices=["learned", "rope"]
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
         "--mode",
@@ -93,6 +96,8 @@ def main(argv: list[str] | None = None) -> int:
             str(args.d_ff),
             "--dropout",
             str(args.dropout),
+            "--positional-encoding",
+            str(args.positional_encoding),
             "--device",
             str(device),
         ]
@@ -106,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
     config.model.n_heads = args.n_heads
     config.model.d_ff = args.d_ff
     config.model.dropout = args.dropout
+    config.model.positional_encoding = args.positional_encoding
 
     model = TransformerLM(config.model).to(device)
     checkpoint_path = runs_dir / "best.pt"

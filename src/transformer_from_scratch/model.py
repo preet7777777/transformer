@@ -27,10 +27,14 @@ class FeedForward(nn.Module):
 
 
 class TransformerBlock(nn.Module):
-    def __init__(self, d_model: int, n_heads: int, d_ff: int, dropout: float):
+    def __init__(
+        self, d_model: int, n_heads: int, d_ff: int, dropout: float, positional_encoding: str
+    ):
         super().__init__()
         self.norm1 = nn.LayerNorm(d_model)
-        self.attn = MultiHeadAttention(d_model, n_heads, dropout)
+        self.attn = MultiHeadAttention(
+            d_model, n_heads, dropout, positional_encoding=positional_encoding
+        )
         self.norm2 = nn.LayerNorm(d_model)
         self.ff = FeedForward(d_model, d_ff, dropout)
 
@@ -45,7 +49,11 @@ class TransformerLM(nn.Module):
         super().__init__()
         self.config = config
         self.token_embedding = nn.Embedding(config.vocab_size, config.d_model)
-        self.position_embedding = nn.Embedding(config.seq_len, config.d_model)
+        self.position_embedding = None
+        if config.positional_encoding == "learned":
+            self.position_embedding = nn.Embedding(config.seq_len, config.d_model)
+        elif config.positional_encoding != "rope":
+            raise ValueError("positional_encoding must be 'learned' or 'rope'")
         self.dropout = nn.Dropout(config.dropout)
         self.blocks = nn.ModuleList(
             [
@@ -54,6 +62,7 @@ class TransformerLM(nn.Module):
                     config.n_heads,
                     config.d_ff,
                     config.dropout,
+                    config.positional_encoding,
                 )
                 for _ in range(config.n_layers)
             ]
@@ -73,12 +82,14 @@ class TransformerLM(nn.Module):
 
     def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
         _, seq_len = input_ids.shape
-        if seq_len > self.config.seq_len:
+        if self.config.positional_encoding == "learned" and seq_len > self.config.seq_len:
             raise ValueError(
                 f"Sequence length {seq_len} exceeds configured maximum {self.config.seq_len}"
             )
-        positions = torch.arange(seq_len, device=input_ids.device).unsqueeze(0)
-        x = self.token_embedding(input_ids) + self.position_embedding(positions)
+        x = self.token_embedding(input_ids)
+        if self.position_embedding is not None:
+            positions = torch.arange(seq_len, device=input_ids.device).unsqueeze(0)
+            x = x + self.position_embedding(positions)
         x = self.dropout(x)
         mask = make_causal_mask(seq_len, input_ids.device)
         for block in self.blocks:

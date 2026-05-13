@@ -18,6 +18,7 @@ class ModelConfig:
     seq_len: int = 32
     d_ff: int = 256
     dropout: float = 0.1
+    positional_encoding: str = "learned"
 
 
 @dataclass

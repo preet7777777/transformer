@@ -119,6 +119,9 @@ def main(argv: list[str] | None = None) -> int:
     report = {
         "output_dir": str(output_dir),
         "checkpoint": str(checkpoint_path),
+        "training_report": json.loads(
+            (runs_dir / "training_report.json").read_text(encoding="utf-8")
+        ),
         "validation_loss": validation_loss,
         "benchmark": benchmark,
     }

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 
 import torch
@@ -168,6 +169,7 @@ def main(argv: list[str] | None = None) -> int:
         LOGGER.info("Resumed from %s at step %s", args.resume, global_step)
 
     best_val = float("inf")
+    last_train_loss = float("inf")
     for epoch in range(start_epoch, config.train.epochs):
         train_loss, global_step = train_one_epoch(
             model,
@@ -179,6 +181,7 @@ def main(argv: list[str] | None = None) -> int:
             global_step,
             epoch,
         )
+        last_train_loss = train_loss
         val_loss = evaluate(model, valid_loader, device)
         LOGGER.info("epoch=%s train_loss=%.4f val_loss=%.4f", epoch + 1, train_loss, val_loss)
 
@@ -200,6 +203,18 @@ def main(argv: list[str] | None = None) -> int:
                 step=global_step,
                 extra={"epoch": epoch, "config": config},
             )
+
+    summary = {
+        "device": str(device),
+        "epochs": config.train.epochs,
+        "final_train_loss": last_train_loss,
+        "best_validation_loss": best_val,
+        "checkpoint": str(out_dir / "checkpoint.pt"),
+        "best_checkpoint": str(out_dir / "best.pt"),
+    }
+    summary_path = out_dir / "training_report.json"
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    LOGGER.info("training_summary=%s", summary_path)
 
     return 0
 

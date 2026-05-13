@@ -67,8 +67,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-new-tokens", type=int, default=16)
     parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--top-k", type=int, default=None)
-    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", type=str, default=None)
+    parser.add_argument("--seed", type=int, default=42)
     return parser
 
 

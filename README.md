@@ -120,6 +120,19 @@ python -m transformer_from_scratch.train \
   --resume runs/demo/checkpoint.pt
 ```
 
+## Latest demo result
+
+The repository includes a real end-to-end CPU demo run captured in [RESULTS.md](RESULTS.md).
+
+Highlights from the latest run:
+
+- final training loss: 4.1676
+- best validation loss: 4.1630
+- benchmark throughput: 539,487.65 tokens/sec
+- mean batch latency: 0.2373 ms
+
+The raw demo artifacts live under [runs/showcase](runs/showcase).
+
 ## Configuration
 
 The training CLI supports both explicit flags and dotlist overrides:

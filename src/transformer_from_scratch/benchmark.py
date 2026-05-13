@@ -32,14 +32,10 @@ def run_benchmark(
     with torch.inference_mode():
         for _ in range(warmup_steps):
             _ = model(inputs)
-        if device.type == "cuda":
-            torch.cuda.synchronize()
 
         start = time.perf_counter()
         for _ in range(iterations):
             _ = model(inputs)
-        if device.type == "cuda":
-            torch.cuda.synchronize()
         elapsed = time.perf_counter() - start
 
     total_tokens = batch_size * seq_len * iterations

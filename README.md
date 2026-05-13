@@ -101,6 +101,12 @@ The benchmark prints JSON with:
 tfs-demo --output-dir runs/showcase
 ```
 
+For a stronger demo result, use a learnable synthetic pattern:
+
+```bash
+tfs-demo --output-dir runs/showcase --mode copy --epochs 30
+```
+
 This command will:
 
 - generate fresh synthetic data
@@ -126,12 +132,12 @@ The repository includes a real end-to-end CPU demo run captured in [RESULTS.md](
 
 Highlights from the latest run:
 
-- final training loss: 4.1676
-- best validation loss: 4.1630
-- benchmark throughput: 539,487.65 tokens/sec
-- mean batch latency: 0.2373 ms
+- final training loss: 1.3406
+- best validation loss: 2.2453
+- benchmark throughput: 433,144.12 tokens/sec
+- mean batch latency: 0.2955 ms
 
-The raw demo artifacts live under [runs/showcase](runs/showcase).
+The raw demo artifacts live under [runs/showcase-copy-30](runs/showcase-copy-30).
 
 ## Configuration
 

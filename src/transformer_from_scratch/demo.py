@@ -32,6 +32,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--d-ff", type=int, default=256)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default="progression",
+        choices=["progression", "repeat", "copy", "random"],
+    )
     parser.add_argument("--device", type=str, default=None)
     parser.add_argument("--benchmark-iterations", type=int, default=50)
     return parser
@@ -56,6 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         n_train=args.n_train,
         n_valid=args.n_valid,
         seed=args.seed,
+        mode=args.mode,
     )
 
     train_main(

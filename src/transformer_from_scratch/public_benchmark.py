@@ -22,7 +22,9 @@ from .utils import ensure_dir, resolve_device, set_seed
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run a public WikiText-2 benchmark and ablation suite")
+    parser = argparse.ArgumentParser(
+        description="Run a public WikiText-2 benchmark and ablation suite"
+    )
     parser.add_argument("--output-dir", type=str, default="runs/public_benchmark")
     parser.add_argument("--seq-len", type=int, default=64)
     parser.add_argument("--benchmark-seq-len", type=int, default=256)

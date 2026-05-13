@@ -259,6 +259,18 @@ Run the public benchmark and ablations:
 make public-benchmark
 ```
 
+## Contributing
+
+Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and [ROADMAP.md](ROADMAP.md).
+
+If you want to help but do not know where to start, good first contributions include:
+
+- documentation improvements
+- extra tests
+- small bug fixes
+- benchmark or evaluation polish
+- new baselines or ablations
+
 ## Design notes
 
 The dataset stores full token sequences, and the collate function shifts them into language-model pairs:

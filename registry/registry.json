@@ -1,0 +1,92 @@
+{
+  "showcase-copy-30": {
+    "name": "showcase-copy-30",
+    "path": "/home/preetsirohi/Desktop/transformer/runs/showcase-copy-30/runs/best.pt",
+    "config": {
+      "vocab_size": 64,
+      "d_model": 32,
+      "n_layers": 1,
+      "n_heads": 4,
+      "seq_len": 16,
+      "d_ff": 64,
+      "dropout": 0.0,
+      "positional_encoding": "learned",
+      "tie_embeddings": true
+    },
+    "created_at": 1778666630.4004347,
+    "description": "auto-registered from runs/showcase-copy-30/runs/best.pt",
+    "metrics": {}
+  },
+  "showcase-copy": {
+    "name": "showcase-copy",
+    "path": "/home/preetsirohi/Desktop/transformer/runs/showcase-copy/runs/best.pt",
+    "config": {
+      "vocab_size": 64,
+      "d_model": 32,
+      "n_layers": 1,
+      "n_heads": 4,
+      "seq_len": 16,
+      "d_ff": 64,
+      "dropout": 0.0,
+      "positional_encoding": "learned",
+      "tie_embeddings": true
+    },
+    "created_at": 1778666630.4024825,
+    "description": "auto-registered from runs/showcase-copy/runs/best.pt",
+    "metrics": {}
+  },
+  "showcase": {
+    "name": "showcase",
+    "path": "/home/preetsirohi/Desktop/transformer/runs/showcase/runs/best.pt",
+    "config": {
+      "vocab_size": 64,
+      "d_model": 32,
+      "n_layers": 1,
+      "n_heads": 4,
+      "seq_len": 16,
+      "d_ff": 64,
+      "dropout": 0.0,
+      "positional_encoding": "learned",
+      "tie_embeddings": true
+    },
+    "created_at": 1778666630.4043696,
+    "description": "auto-registered from runs/showcase/runs/best.pt",
+    "metrics": {}
+  },
+  "showcase-repeat": {
+    "name": "showcase-repeat",
+    "path": "/home/preetsirohi/Desktop/transformer/runs/showcase-repeat/runs/best.pt",
+    "config": {
+      "vocab_size": 64,
+      "d_model": 32,
+      "n_layers": 1,
+      "n_heads": 4,
+      "seq_len": 16,
+      "d_ff": 64,
+      "dropout": 0.0,
+      "positional_encoding": "learned",
+      "tie_embeddings": true
+    },
+    "created_at": 1778666630.406257,
+    "description": "auto-registered from runs/showcase-repeat/runs/best.pt",
+    "metrics": {}
+  },
+  "public-eval": {
+    "name": "public-eval",
+    "path": "/home/preetsirohi/Desktop/transformer/runs/public-eval/runs/best.pt",
+    "config": {
+      "vocab_size": 65,
+      "d_model": 128,
+      "n_layers": 2,
+      "n_heads": 4,
+      "seq_len": 64,
+      "d_ff": 256,
+      "dropout": 0.1,
+      "positional_encoding": "rope",
+      "tie_embeddings": true
+    },
+    "created_at": 1778666630.4112113,
+    "description": "auto-registered from runs/public-eval/runs/best.pt",
+    "metrics": {}
+  }
+}

@@ -21,6 +21,13 @@ dev = [
   "isort",
   "ruff",
   "pytest",
+  "httpx",
+]
+api = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.29",
+  "pydantic>=2.0",
+  "psutil>=5.9",
 ]
 
 [project.scripts]
@@ -31,6 +38,8 @@ tfs-demo = "transformer_from_scratch.demo:main"
 tfs-sample = "transformer_from_scratch.generation:main"
 tfs-public-eval = "transformer_from_scratch.public_eval:main"
 tfs-public-benchmark = "transformer_from_scratch.public_benchmark:main"
+tfs-serve = "transformer_from_scratch.api:main"
+tfs-web = "transformer_from_scratch.webapp:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -12,6 +12,73 @@
   <a href="https://github.com/preet7777777/transformer/actions"><img alt="CI" src="https://img.shields.io/badge/ci-github%20actions-2088FF.svg"></a>
 </p>
 
+## v1 — Inference API + Web Demo
+
+v1 ships a production-grade inference layer on top of the existing training stack:
+
+- **REST API** (`tfs-serve`) — FastAPI server with `/generate`, `/score`, `/health`, and `/metrics`
+- **Web demo** (`tfs-web`) — single-page UI for interactive token generation
+- **Checkpoint registry** — file-backed version registry with auto-scan of `runs/`
+- **Monitoring** — per-request latency (p50/p95), throughput, error rate, and RSS memory
+- **Rate limiting** — sliding-window 60 req/min per IP, configurable via env vars
+- **Request timeouts** — 30 s default, configurable via `TFS_REQUEST_TIMEOUT`
+
+### Quick start: API server
+
+```bash
+pip install -e ".[api]"
+
+# Register a checkpoint
+python -c "
+from transformer_from_scratch.registry import CheckpointRegistry
+from transformer_from_scratch.config import ModelConfig
+r = CheckpointRegistry('./registry')
+r.register('v1', './runs/demo/best.pt', ModelConfig(), description='my first model')
+"
+
+# Start the API (auto-scans ./runs/ for checkpoints)
+tfs-serve --registry-dir ./registry --runs-dir ./runs
+
+# Open the web demo (points to http://localhost:8000 by default)
+tfs-web
+```
+
+### API endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Liveness check — device, loaded models, uptime |
+| `GET` | `/models` | List all registered versions |
+| `POST` | `/generate` | Autoregressive token generation |
+| `POST` | `/score` | Per-token log-probs + perplexity |
+| `GET` | `/metrics` | Plain-text counters (requests, latency, tokens, memory) |
+
+**Generate example:**
+
+```bash
+curl -s -X POST http://localhost:8000/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model_version":"v1","prompt":[0,1,2],"max_new_tokens":8,"temperature":0.8}' | python -m json.tool
+```
+
+**Score example:**
+
+```bash
+curl -s -X POST http://localhost:8000/score \
+  -H "Content-Type: application/json" \
+  -d '{"model_version":"v1","tokens":[0,1,2,3,4]}' | python -m json.tool
+```
+
+### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TFS_MAX_TOKENS` | `512` | Max `max_new_tokens` per request |
+| `TFS_MAX_PROMPT_LEN` | `256` | Max prompt length |
+| `TFS_REQUEST_TIMEOUT` | `30.0` | Per-request timeout in seconds |
+
+---
+
 ## Why this repo stands out
 
 This project is intentionally small, but it is wired like a real ML codebase:
@@ -219,6 +286,9 @@ python -m transformer_from_scratch.train \
 - [src/transformer_from_scratch/generation.py](src/transformer_from_scratch/generation.py) — autoregressive sampling helpers
 - [src/transformer_from_scratch/optim.py](src/transformer_from_scratch/optim.py) — optimizer and scheduler helpers
 - [src/transformer_from_scratch/checkpoint.py](src/transformer_from_scratch/checkpoint.py) — checkpoint save/load helpers
+- [src/transformer_from_scratch/registry.py](src/transformer_from_scratch/registry.py) — checkpoint registry and model versioning
+- [src/transformer_from_scratch/api.py](src/transformer_from_scratch/api.py) — FastAPI inference server (v1)
+- [src/transformer_from_scratch/webapp.py](src/transformer_from_scratch/webapp.py) — web demo UI (v1)
 - [src/transformer_from_scratch/tests](src/transformer_from_scratch/tests) — unit and smoke tests
 
 ## Development
@@ -288,7 +358,14 @@ This keeps the implementation simple while preserving standard autoregressive tr
 - NumPy
 - PyYAML
 - tqdm
-- pytest
+
+**API / web demo (optional):**
+- fastapi ≥ 0.110
+- uvicorn[standard] ≥ 0.29
+- pydantic ≥ 2.0
+- psutil ≥ 5.9
+
+Install with: `pip install -e ".[api]"`
 
 ## License
 

@@ -146,12 +146,8 @@ def prepare_wikitext2(
 ) -> dict[str, Any]:
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    train_path = download_text(
-        WIKITEXT2_TRAIN_URL, output_dir / "wikitext-2-train.txt"
-    )
-    valid_path = download_text(
-        WIKITEXT2_VALID_URL, output_dir / "wikitext-2-valid.txt"
-    )
+    train_path = download_text(WIKITEXT2_TRAIN_URL, output_dir / "wikitext-2-train.txt")
+    valid_path = download_text(WIKITEXT2_VALID_URL, output_dir / "wikitext-2-valid.txt")
     train_text = train_path.read_text(encoding="utf-8")
     valid_text = valid_path.read_text(encoding="utf-8")
     stoi, itos = build_vocab(train_text + valid_text)

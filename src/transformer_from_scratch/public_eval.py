@@ -8,11 +8,11 @@ import math
 
 import numpy as np
 
+from .baselines import bigram_baseline_loss, unigram_baseline_loss
 from .benchmark import run_benchmark
 from .checkpoint import load_checkpoint
 from .config import ModelConfig
 from .model import TransformerLM
-from .baselines import bigram_baseline_loss, unigram_baseline_loss
 from .public_data import prepare_tiny_shakespeare
 from .train import evaluate
 from .train import main as train_main

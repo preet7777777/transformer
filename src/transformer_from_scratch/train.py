@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import logging
-from pathlib import Path
 
 import torch
 import torch.nn.functional as F
@@ -150,9 +149,15 @@ def main(argv: list[str] | None = None) -> int:
     valid_loader = build_dataloader(valid_ds, batch_size=config.train.batch_size, shuffle=False)
 
     model = TransformerLM(config.model).to(device)
-    optimizer = build_adamw_optimizer(model, lr=config.train.lr, weight_decay=config.train.weight_decay)
+    optimizer = build_adamw_optimizer(
+        model, lr=config.train.lr, weight_decay=config.train.weight_decay
+    )
     total_steps = max(1, len(train_loader) * config.train.epochs)
-    scheduler = CosineWarmupScheduler(optimizer, warmup_steps=config.train.warmup_steps, total_steps=total_steps)
+    scheduler = CosineWarmupScheduler(
+        optimizer,
+        warmup_steps=config.train.warmup_steps,
+        total_steps=total_steps,
+    )
 
     global_step = 0
     start_epoch = 0

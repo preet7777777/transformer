@@ -48,7 +48,15 @@ class TransformerLM(nn.Module):
         self.position_embedding = nn.Embedding(config.seq_len, config.d_model)
         self.dropout = nn.Dropout(config.dropout)
         self.blocks = nn.ModuleList(
-            [TransformerBlock(config.d_model, config.n_heads, config.d_ff, config.dropout) for _ in range(config.n_layers)]
+            [
+                TransformerBlock(
+                    config.d_model,
+                    config.n_heads,
+                    config.d_ff,
+                    config.dropout,
+                )
+                for _ in range(config.n_layers)
+            ]
         )
         self.final_norm = nn.LayerNorm(config.d_model)
         self.lm_head = nn.Linear(config.d_model, config.vocab_size, bias=False)
@@ -64,9 +72,11 @@ class TransformerLM(nn.Module):
             nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
     def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
-        batch, seq_len = input_ids.shape
+        _, seq_len = input_ids.shape
         if seq_len > self.config.seq_len:
-            raise ValueError(f"Sequence length {seq_len} exceeds configured maximum {self.config.seq_len}")
+            raise ValueError(
+                f"Sequence length {seq_len} exceeds configured maximum {self.config.seq_len}"
+            )
         positions = torch.arange(seq_len, device=input_ids.device).unsqueeze(0)
         x = self.token_embedding(input_ids) + self.position_embedding(positions)
         x = self.dropout(x)

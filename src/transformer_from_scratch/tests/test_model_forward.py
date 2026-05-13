@@ -14,7 +14,15 @@ def test_olmo_tiny_forward_shape() -> None:
 
 
 def test_custom_model_forward_shape() -> None:
-    config = ModelConfig(vocab_size=64, d_model=32, n_layers=1, n_heads=4, seq_len=16, d_ff=64, dropout=0.0)
+    config = ModelConfig(
+        vocab_size=64,
+        d_model=32,
+        n_layers=1,
+        n_heads=4,
+        seq_len=16,
+        d_ff=64,
+        dropout=0.0,
+    )
     model = TransformerLM(config)
     input_ids = torch.randint(0, config.vocab_size, (3, 16))
     logits = model(input_ids)

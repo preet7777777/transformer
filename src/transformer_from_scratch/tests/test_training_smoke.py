@@ -4,15 +4,23 @@ from pathlib import Path
 
 import torch
 
-from transformer_from_scratch.prepare_synthetic import generate_synthetic_data
-from transformer_from_scratch.train import evaluate, main as train_main
 from transformer_from_scratch.config import Config
 from transformer_from_scratch.data import NumpyDataset, build_dataloader
 from transformer_from_scratch.model import TransformerLM
+from transformer_from_scratch.prepare_synthetic import generate_synthetic_data
+from transformer_from_scratch.train import evaluate
+from transformer_from_scratch.train import main as train_main
 
 
 def test_training_smoke(tmp_path: Path) -> None:
-    generate_synthetic_data(tmp_path, vocab_size=64, model_seq_len=16, n_train=32, n_valid=16, seed=1)
+    generate_synthetic_data(
+        tmp_path,
+        vocab_size=64,
+        model_seq_len=16,
+        n_train=32,
+        n_valid=16,
+        seed=1,
+    )
     out_dir = tmp_path / "runs"
     train_main(
         [
@@ -49,7 +57,14 @@ def test_training_smoke(tmp_path: Path) -> None:
 
 
 def test_validation_loss_is_finite(tmp_path: Path) -> None:
-    generate_synthetic_data(tmp_path, vocab_size=64, model_seq_len=16, n_train=16, n_valid=8, seed=2)
+    generate_synthetic_data(
+        tmp_path,
+        vocab_size=64,
+        model_seq_len=16,
+        n_train=16,
+        n_valid=8,
+        seed=2,
+    )
     config = Config()
     config.model.vocab_size = 64
     config.model.seq_len = 16

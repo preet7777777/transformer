@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any, ClassVar
-
 _REGISTRIES: dict[type, dict[str, type]] = {}
 
 

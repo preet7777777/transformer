@@ -32,7 +32,13 @@ def build_adamw_optimizer(
 
 
 class CosineWarmupScheduler:
-    def __init__(self, optimizer: Optimizer, warmup_steps: int, total_steps: int, min_lr_ratio: float = 0.1):
+    def __init__(
+        self,
+        optimizer: Optimizer,
+        warmup_steps: int,
+        total_steps: int,
+        min_lr_ratio: float = 0.1,
+    ):
         self.optimizer = optimizer
         self.warmup_steps = max(1, warmup_steps)
         self.total_steps = max(self.warmup_steps + 1, total_steps)

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 import numpy as np
 import torch
@@ -33,7 +33,13 @@ def lm_collate(batch: list[torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor]:
 
 
 def build_dataloader(dataset: Dataset, batch_size: int, shuffle: bool = True) -> DataLoader:
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=lm_collate, drop_last=False)
+    return DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        collate_fn=lm_collate,
+        drop_last=False,
+    )
 
 
 class StreamingNumpyShards:

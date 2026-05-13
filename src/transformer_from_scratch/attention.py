@@ -51,4 +51,8 @@ class MultiHeadAttention(nn.Module):
 
 
 def make_causal_mask(seq_len: int, device: torch.device) -> torch.Tensor:
-    return torch.tril(torch.ones(seq_len, seq_len, device=device, dtype=torch.bool)).unsqueeze(0).unsqueeze(0)
+    return (
+        torch.tril(torch.ones(seq_len, seq_len, device=device, dtype=torch.bool))
+        .unsqueeze(0)
+        .unsqueeze(0)
+    )

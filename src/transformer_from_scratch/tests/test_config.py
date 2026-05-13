@@ -16,7 +16,10 @@ def test_load_and_override(tmp_path: Path) -> None:
     assert loaded.model.vocab_size == 128
     assert loaded.train.batch_size == 8
 
-    merged = merge_dotlist(loaded, ["model.seq_len=16", "train.lr=0.001", "data.train_path=data/train.npy"])
+    merged = merge_dotlist(
+        loaded,
+        ["model.seq_len=16", "train.lr=0.001", "data.train_path=data/train.npy"],
+    )
     assert merged.model.seq_len == 16
     assert merged.train.lr == 0.001
     assert merged.data.train_path == "data/train.npy"
